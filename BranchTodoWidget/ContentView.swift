@@ -24,6 +24,7 @@ class Simulation: ObservableObject {
 }
 
 struct ContentView: View {
+    @State private var blurRadius: CGFloat = 0.0
     @State private var thefruit = ""
     @AppStorage("fruit") var fruit = ""
     
@@ -35,7 +36,7 @@ struct ContentView: View {
             Button("Save fruit") {
                 fruit = simulation.step.formatted();
             }
-            Text("Saved fruit: \(fruit)")
+            Text("Saved fruit: \(fruit)").blur(radius: blurRadius)
             
             Text("Running \(simulation.step + 1) / \(simulation.nsteps)")
             
@@ -43,6 +44,10 @@ struct ContentView: View {
                 Task {
                     await simulation.run()
                 }
+            }
+            
+            Slider(value: $blurRadius, in: 0...20, minimumValueLabel: Text("0"), maximumValueLabel: Text("20")) {
+                Text("Blur radius")
             }
         }
         .padding()
