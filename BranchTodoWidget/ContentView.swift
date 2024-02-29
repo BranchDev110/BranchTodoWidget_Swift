@@ -23,12 +23,24 @@ class Simulation: ObservableObject {
     }
 }
 
+struct RoundedButtonStyle: ButtonStyle {
+    func makeBody(configuration: Configuration) -> some View {
+        configuration.label
+            .foregroundColor(.black)
+            .padding()
+            .background(Color.yellow.cornerRadius(12))
+            .scaleEffect(configuration.isPressed ? 0.95 : 1)
+    }
+}
+
 struct ContentView: View {
     @State private var blurRadius: CGFloat = 0.0
     @State private var thefruit = ""
     @AppStorage("fruit") var fruit = ""
     
     @StateObject private var simulation = Simulation()
+    
+    @Environment(\.displayScale) var displayScale
     
     var body: some View {
         VStack {
@@ -49,6 +61,12 @@ struct ContentView: View {
             Slider(value: $blurRadius, in: 0...20, minimumValueLabel: Text("0"), maximumValueLabel: Text("20")) {
                 Text("Blur radius")
             }
+            
+            Button("Rounded Style") {}.buttonStyle(RoundedButtonStyle())
+            
+            Button(" crosshair ") {}.onHover(perform: {hovering in hovering ? NSCursor.crosshair.push() : NSCursor.pop()})
+            
+            Text("Display Scale\(displayScale)")
         }
         .padding()
     }
